@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 const App = () => {
   const [search, setSearch] = useState("");
   const [countries, setCountries] = useState([]);
+  const [loading, setLoading] = useState(true); // New state for loading
 
   useEffect(() => {
     fetchCountries();
@@ -14,8 +15,10 @@ const App = () => {
     try {
       const response = await axios.get("https://restcountries.com/v3.1/all");
       setCountries(response.data);
+      setLoading(false); // Set loading to false once data is fetched
     } catch (error) {
       console.error("something is wrong", error);
+      setLoading(false); // Ensure loading is false even on error
     }
   };
 
@@ -33,7 +36,13 @@ const App = () => {
         onChange={(e) => setSearch(e.target.value)}
       ></input>
 
+      {/* Show loading spinner if data is still being fetched */}
+      {loading && <div className="loading">Loading...</div>}
+
       <div className="countryGrid">
+        {!loading && filteredCountries.length === 0 && (
+          <p>No countries found</p>
+        )}
         {filteredCountries.map((country) => {
           return (
             <div key={country.cca3} className="countryCard">
