@@ -18,11 +18,12 @@ const App = () => {
       setCountries(response.data);
       setLoading(false);
     } catch (error) {
-      console.error("Something went wrong", error);
+      console.error("API Error: ", error);  // Ensure this logs in a specific format
       setLoading(false);
     }
   };
 
+  // Ensure the countries are being filtered correctly
   const filteredCountries = countries.filter((country) =>
     country.name.common.toLowerCase().includes(search.toLowerCase())
   );
