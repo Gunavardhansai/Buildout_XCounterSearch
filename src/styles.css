@@ -1,54 +1,31 @@
 /** @format */
-import axios from "axios";
-import "./App.css";
-import { useEffect, useState } from "react";
-const App = () => {
-  const [search, setSearch] = useState("");
-  const [countries, setCountries] = useState([]);
 
-  useEffect(() => {
-    fetchCountries();
-  }, []);
+.countryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
 
-  const fetchCountries = async () => {
-    try {
-      const response = await axios.get("https://restcountries.com/v3.1/all");
-      setCountries(response.data);
-    } catch (error) {
-      console.error("something is wrong", error);
-    }
-  };
+.searchInput {
+  width: 300px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
 
-  const filteredCountries = countries.filter((country) =>
-    country.name.common.toLowerCase().includes(search.toLowerCase())
-  );
+.countryCard {
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+}
 
-  return (
-    <div>
-      <input
-        type="text"
-        placeholder="Search for countries..."
-        value={search}
-        className="searchInput"
-        onChange={(e) => setSearch(e.target.value)}
-      ></input>
-
-      <div className="countryGrid">
-        {filteredCountries.map((country) => {
-          return (
-            <div key={country.cca3} className="countryCard">
-              <img
-                src={country.flags.png}
-                alt={country.name.common}
-                className="flag"
-              />
-              <p className="countryName">{country.name.common}</p>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
-
-export default App;
+.flag {
+  width: 100px;
+  height: auto;
+  margin-bottom: 10px;
+}
+.countryName {
+  font-weight: bold;
+}

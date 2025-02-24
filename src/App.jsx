@@ -1,7 +1,7 @@
-/** @format */
 import axios from "axios";
 import "./styles.css";
 import { useEffect, useState } from "react";
+
 const App = () => {
   const [search, setSearch] = useState("");
   const [countries, setCountries] = useState([]);
