@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 const App = () => {
   const [search, setSearch] = useState("");
   const [countries, setCountries] = useState([]);
-  const [loading, setLoading] = useState(true); // New state for loading
+  const [loading, setLoading] = useState(true); // Add loading state to handle async rendering
 
   useEffect(() => {
     fetchCountries();
@@ -13,12 +13,13 @@ const App = () => {
 
   const fetchCountries = async () => {
     try {
+      setLoading(true); // Set loading state to true before fetching
       const response = await axios.get("https://restcountries.com/v3.1/all");
       setCountries(response.data);
-      setLoading(false); // Set loading to false once data is fetched
+      setLoading(false); // Set loading state to false when done
     } catch (error) {
-      console.error("something is wrong", error);
-      setLoading(false); // Ensure loading is false even on error
+      console.error("something went wrong", error);
+      setLoading(false); // Ensure loading state is false even on error
     }
   };
 
@@ -34,27 +35,25 @@ const App = () => {
         value={search}
         className="searchInput"
         onChange={(e) => setSearch(e.target.value)}
-      ></input>
+      />
 
-      {/* Show loading spinner if data is still being fetched */}
-      {loading && <div className="loading">Loading...</div>}
+      {/* Display loading message if data is being fetched */}
+      {loading && <p>Loading countries...</p>}
 
       <div className="countryGrid">
-        {!loading && filteredCountries.length === 0 && (
-          <p>No countries found</p>
-        )}
-        {filteredCountries.map((country) => {
-          return (
-            <div key={country.cca3} className="countryCard">
-              <img
-                src={country.flags.png}
-                alt={country.name.common}
-                className="flag"
-              />
-              <p className="countryName">{country.name.common}</p>
-            </div>
-          );
-        })}
+        {/* Ensure that there are countries before rendering country cards */}
+        {!loading && filteredCountries.length === 0 && <p>No countries found.</p>}
+
+        {filteredCountries.map((country) => (
+          <div key={country.cca3} className="countryCard">
+            <img
+              src={country.flags.png}
+              alt={country.name.common}
+              className="flag"
+            />
+            <p className="countryName">{country.name.common}</p>
+          </div>
+        ))}
       </div>
     </div>
   );
