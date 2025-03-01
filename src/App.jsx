@@ -12,7 +12,7 @@ const App = () => {
 
   const fetchCountries = async () => {
     try {
-      const response = await axios.get("https://restcountries.com/v3.1/all");
+      const response = await axios.get("https://countries-search-data-prod-812920491762.asia-south1.run.app/countries");
       setCountries(response.data);
     } catch (error) {
       console.error("something is wrong", error);
