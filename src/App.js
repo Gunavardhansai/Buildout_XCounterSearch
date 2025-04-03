@@ -12,14 +12,14 @@ function App() {
   };
 
   const fetchCountryData = async () => {
-    let url =
+    const url =
       "https://countries-search-data-prod-812920491762.asia-south1.run.app/countries";
     try {
-      let response = await axios.get(url);
+      const response = await axios.get(url);
       setCountryData(response.data);
       setFilterCountryData(response.data);
     } catch (error) {
-      console.log("Error: ", error);
+      console.error("Error fetching country data:", error);
     }
   };
 
@@ -27,50 +27,36 @@ function App() {
     fetchCountryData();
   }, []);
 
-  const searchCountries = async () => {
-    if (searchText === "") {
-      setFilterCountryData(countryData);
-      return;
-    }
-
-    let url =
-      "https://countries-search-data-prod-812920491762.asia-south1.run.app/countries";
-
-    try {
-      let response = await axios.get(url);
-
-      const filteredData = response.data.filter(
-        (country) =>
-          country.name &&
-          country.name.common &&
-          country.name.common.toLowerCase().includes(searchText.toLowerCase())
-      );
-
-      setFilterCountryData(filteredData);
-    } catch (error) {
-      console.log("Error: ", error);
-    }
-  };
-
   useEffect(() => {
-    searchCountries();
-  }, [searchText]);
+    if (!searchText.trim()) {
+      setFilterCountryData(countryData);
+    } else {
+      const filteredData = countryData.filter(
+        (country) =>
+          country.common?.toLowerCase().includes(searchText.toLowerCase())
+      );
+      setFilterCountryData(filteredData);
+    }
+  }, [searchText, countryData]);
 
   return (
     <div>
       <div className="searchSection">
-        <form>
-          <input
-            type="text"
-            placeholder="Search for countries..."
-            value={searchText}
-            onChange={(e) => handleChange(e)}
-          />
-        </form>
+        <input
+          type="text"
+          placeholder="Search for countries..."
+          value={searchText}
+          onChange={handleChange}
+        />
       </div>
       <div className="App">
-        {filterCountryData &&
-          filterCountryData.map((ele) => <CountriesSearch data={ele} />)}
+        {filterCountryData.length > 0 ? (
+          filterCountryData.map((country, index) => (
+            <CountriesSearch key={index} data={country} />
+          ))
+        ) : (
+          <p>No countries found</p>
+        )}
       </div>
     </div>
   );
